@@ -9,7 +9,13 @@ Um protótipo minimalista de chatbot para mercadinho que responde perguntas em l
 
 ## Como Rodar Localmente
 
+
+
+
 1. Clone este repositório:
    ```bash
    git clone [https://github.com/dsbrogio/chatbot-vendinha.git](https://github.com/dsbrogio/chatbot-vendinha.git)
-   cd chatbot-vendinha
+Crie um arquivo .env na raiz do chatbot e dentro dele insira a linha: GEMINI_API_KEY=chave de API salve.
+cd chatbot-vendinha
+npm start
+acesse: http://localhost:3000
