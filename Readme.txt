@@ -11,5 +11,5 @@ Um protótipo minimalista de chatbot para mercadinho que responde perguntas em l
 
 1. Clone este repositório:
    ```bash
-   git clone [https://github.com/seu-usuario/chatbot-vendinha.git](https://github.com/seu-usuario/chatbot-vendinha.git)
+   git clone [https://github.com/dsbrogio/chatbot-vendinha.git](https://github.com/dsbrogio/chatbot-vendinha.git)
    cd chatbot-vendinha
