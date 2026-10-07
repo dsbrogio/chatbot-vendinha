@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat da Vendinha</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f9; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .chat-container { width: 100%; max-width: 500px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; height: 80vh; }
+        .chat-header { background: #2c3e50; color: white; padding: 15px; border-top-left-radius: 8px; border-top-right-radius: 8px; font-weight: bold; }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .message { padding: 10px 14px; border-radius: 6px; max-width: 80%; line-height: 1.4; }
+        .user { background: #3498db; color: white; align-self: flex-end; }
+        .bot { background: #ecf0f1; color: #2c3e50; align-self: flex-start; }
+        .chat-input { display: flex; border-top: 1px solid #ddd; padding: 10px; background: #fff; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
+        .chat-input input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; outline: none; }
+        .chat-input button { background: #2ecc71; color: white; border: none; padding: 10px 15px; margin-left: 8px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .chat-input button:hover { background: #27ae60; }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">🛒 Mercearia da Esquina - Atendimento</div>
+    <div id="messages" class="chat-messages">
+        <div class="message bot">Olá! Bem-vindo à Mercearia da Esquina. O que você precisa hoje?</div>
+    </div>
+    <div class="chat-input">
+        <input type="text" id="userInput" placeholder="Ex: Tem café? Quanto custa?" autofocus>
+        <button onclick="enviarMensagem()">Enviar</button>
+    </div>
+</div>
+
+<script>
+    const input = document.getElementById('userInput');
+    const messages = document.getElementById('messages');
+
+    input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') enviarMensagem();
+    });
+
+    async function enviarMensagem() {
+        const texto = input.value.trim();
+        if (!texto) return;
+
+        appendMessage(texto, 'user');
+        input.value = '';
+
+        // Indicador de digitação simples
+        const loadingId = appendMessage('Consultando estoque...', 'bot');
+
+        try {
+            const res = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mensagem: texto })
+            });
+            const data = await res.json();
+            
+            // Remove a mensagem de carregamento e coloca a resposta real
+            document.getElementById(loadingId).remove();
+            appendMessage(data.resposta, 'bot');
+        } catch (err) {
+            document.getElementById(loadingId).remove();
+            appendMessage('Erro ao comunicar com o servidor.', 'bot');
+        }
+    }
+
+    function appendMessage(text, sender) {
+        const div = document.createElement('div');
+        div.className = `message ${sender}`;
+        div.id = 'msg-' + Math.random();
+        div.innerText = text;
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+        return div.id;
+    }
+</script>
+
+</body>
+</html>
